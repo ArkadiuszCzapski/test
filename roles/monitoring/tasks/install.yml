@@ -1,0 +1,14 @@
+- name: Install munin service
+  become: yes
+  apt:
+   name: "{{ item }}"
+   state: present
+  with_items:
+   - 'apache2'
+   - 'libwww-perl'
+   - 'libcache-cache-perl'
+   - 'munin-node'
+   - 'libapache2-mod-fcgid'
+   - 'libcgi-fast-perl'
+   - 'munin'
+   - 'munin-node'

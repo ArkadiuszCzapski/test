@@ -1,0 +1,4 @@
+- name: Install and configure monitoring tasks
+  hosts: servnauka
+  roles:
+  - monitoring

@@ -1,0 +1,4 @@
+- name: Install and configure users tasks
+  hosts: servnauka
+  roles:
+  - users

@@ -1,0 +1,81 @@
+---
+# tasks file for users
+- name: Create user name group
+  become: yes
+  group: name={{ item }} state=present
+  with_items:
+      - '{{ user_name_1 }}'
+      - '{{ user_name_2 }}'
+      - '{{ user_name_3 }}'
+
+- name: Create user 1
+  become: yes
+  user:
+    name={{ user_name_1 }}
+    state=present
+    password={{ user_name_1_pass | password_hash('sha512') }}
+    groups={{ user_name_1 }}
+    system=yes
+    shell=/bin/bash
+    home=/home/{{ user_name_1 }}
+
+- name: Create user 2
+  become: yes
+  user:
+    name={{ user_name_2 }}
+    state=present
+    password={{ user_name_2_pass | password_hash('sha512') }}
+    groups={{ user_name_2 }}
+    system=yes
+    shell=/bin/bash
+    home=/home/{{ user_name_2}}
+
+- name: Create user admin
+  become: yes
+  user:
+    name={{ user_name_3 }}
+    state=present
+    password={{ user_name_3_pass | password_hash('sha512') }}
+    groups={{ user_name_3 }},sudo
+    system=yes
+    shell=/bin/bash
+    home=/home/{{ user_name_3 }}
+  
+- name: add nopasswd in visudo admin
+  become: yes
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    line: '{{ user_name_3 }} ALL=NOPASSWD:ALL'
+    validate: 'visudo -cf %s'
+
+# - name: Add ssh key user 1 
+#   become: yes
+#   authorized_key: user={{ user_name_1 }} state=present exclusive=no key="{{ lookup('file', '/home/aczapski/.ssh/user1.pub') }}"
+
+# - name: Add ssh key user 2 
+#   become: yes
+#   authorized_key: user={{ user_name_2 }} state=present exclusive=no key="{{ lookup('file', '/home/aczapski/.ssh/user2.pub') }}"
+
+# - name: Add ssh key user 3 
+#   become: yes
+#   authorized_key: user={{ user_name_3 }} state=present exclusive=no key="{{ lookup('file', '/home/aczapski/.ssh/admin.pub') }}"
+
+- name: Disable Password Authentication
+  become: yes
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^AuthorizedKeysFile^'
+    line: AuthorizedKeysFile .ssh/authorized_keys
+
+- name: Disable Password Authentication
+  become: yes
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: 'PasswordAuthentication yes'
+    line: PasswordAuthentication no
+
+- name: Restart ssh
+  become: yes
+  service: name=ssh state=restarted
+  
