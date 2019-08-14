@@ -49,17 +49,17 @@
     line: '{{ user_name_3 }} ALL=NOPASSWD:ALL'
     validate: 'visudo -cf %s'
 
-# - name: Add ssh key user 1 
-#   become: yes
-#   authorized_key: user={{ user_name_1 }} state=present exclusive=no key="{{ lookup('file', '/home/aczapski/.ssh/user1.pub') }}"
+- name: Add ssh key user 1 
+  become: yes
+  authorized_key: user={{ user_name_1 }} state=present exclusive=no key="{{ lookup('file', '/home/aczapski/.ssh/user1.pub') }}"
 
-# - name: Add ssh key user 2 
-#   become: yes
-#   authorized_key: user={{ user_name_2 }} state=present exclusive=no key="{{ lookup('file', '/home/aczapski/.ssh/user2.pub') }}"
+- name: Add ssh key user 2 
+  become: yes
+  authorized_key: user={{ user_name_2 }} state=present exclusive=no key="{{ lookup('file', '/home/aczapski/.ssh/user2.pub') }}"
 
-# - name: Add ssh key user 3 
-#   become: yes
-#   authorized_key: user={{ user_name_3 }} state=present exclusive=no key="{{ lookup('file', '/home/aczapski/.ssh/admin.pub') }}"
+- name: Add ssh key user 3 
+  become: yes
+  authorized_key: user={{ user_name_3 }} state=present exclusive=no key="{{ lookup('file', '/home/aczapski/.ssh/admin.pub') }}"
 
 - name: Disable Password Authentication
   become: yes
